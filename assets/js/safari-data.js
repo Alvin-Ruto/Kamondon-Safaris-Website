@@ -15,12 +15,20 @@ window.KAMONDON_DATA = {
       accommodationOptions: ["Enchoro Wild Camp", "Flair Camp", "Mara Ndovu Lodge", "Enkorok Mara Camp", "Marandini Camp"],
       transportOptions: ["Land Cruiser", "Tour Van"],
       detailHref: "package-detail.html",
-      detailLabel: "View full package"
+      detailLabel: "View full package",
+      enquiryHref: "contact.html?package=maasai-mara-safari#enquiry",
+      reverse: {
+        heading: "Your Maasai Mara safari",
+        introduction: "A three-day, two-night safari combining game drives, full-board accommodation, and flexible transport options.",
+        features: ["Two nights’ accommodation", "Meals provided on full board", "Game drives in Maasai Mara", "Land Cruiser or Tour Van options"],
+        note: "Selected stays include Enchoro Wild Camp, Flair Camp, Mara Ndovu Lodge, Enkorok Mara Camp, and Marandini Camp.",
+        exclusions: "Tips and parking are not included."
+      }
     },
     {
       id: "nairobi-circuit",
       title: "Nairobi Circuit Day Trip",
-      duration: "Day trip",
+      duration: "Full Day",
       location: "Nairobi",
       summary: "Visit Nairobi’s wildlife attractions and city recreation sites in one flexible day itinerary.",
       image: "assets/images/Images-K/Nairobi Circuit/giraffe-center-1a.jpg",
@@ -30,7 +38,34 @@ window.KAMONDON_DATA = {
       stops: ["Animal Orphanage", "Nairobi Safari Walk", "Giraffe Centre", "Uhuru Park"],
       exclusions: ["Tips", "Park entry"],
       detailHref: "packages.html#nairobi-circuit",
-      detailLabel: "View itinerary"
+      detailLabel: "View itinerary",
+      enquiryHref: "contact.html?package=nairobi-circuit-day-trip#enquiry",
+      reverse: {
+        heading: "Explore Nairobi in one day",
+        introduction: "A flexible city and wildlife day trip covering four popular Nairobi attractions.",
+        features: ["Nairobi Animal Orphanage", "Nairobi Safari Walk", "Giraffe Centre", "Uhuru Park Recreational Centre"],
+        exclusions: "Tips and park entry are not included."
+      }
+    },
+    {
+      id: "diani-beach",
+      title: "Diani Beach Holiday",
+      duration: "Custom Stay",
+      location: "Diani",
+      summary: "Create a personalised Diani beach escape with accommodation, transfers, excursions, and flexible trip planning.",
+      image: "assets/images/diani-coast-turquoise.jpg",
+      imageAlt: "Turquoise water and white sand at Diani Beach",
+      tags: ["Custom Trip", "Beach"],
+      priceLabel: "Custom USD rate",
+      detailHref: "contact.html?package=diani-beach-holiday#enquiry",
+      detailLabel: "Send enquiry",
+      enquiryHref: "contact.html?package=diani-beach-holiday#enquiry",
+      reverse: {
+        heading: "Build your Diani escape",
+        introduction: "Tell Kamondon Safaris what kind of beach holiday you want, and the team will create a trip around your dates, group, preferences, and budget.",
+        features: ["Hotel or resort booking", "Airport and hotel transfers", "Optional beach and local excursions", "Custom planning for couples, families, and groups"],
+        note: "Trip duration, accommodation level, activities, and transport can all be tailored to your needs."
+      }
     }
   ],
   gallery: [

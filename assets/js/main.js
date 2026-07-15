@@ -227,25 +227,23 @@ function setupLightbox() {
 }
 
 function packageCardMarkup(pkg) {
-  const list = pkg.stops || pkg.inclusions;
-  const heading = pkg.stops ? "Places on this route" : "What is included";
-  const detail = pkg.stops
-    ? `<p class="package-note">Tips and park entry are excluded.</p>`
-    : `<p class="package-note"><strong>Transport:</strong> ${pkg.transportOptions.join(" or ")}<br><strong>Selected stays:</strong> ${pkg.accommodationOptions.slice(0, 3).join(", ")} and more</p>`;
+  const detailsId = `package-details-${pkg.id}`;
+  const href = pkg.detailHref || pkg.enquiryHref || "contact.html#enquiry";
+  if (!pkg.detailHref && !pkg.enquiryHref) console.warn(`Package "${pkg.id}" has no action route; using the enquiry page.`);
   return `<article class="flip-card reveal" data-package-card>
     <div class="flip-card-inner">
       <div class="package-card flip-card-face flip-card-front">
         <img src="${pkg.image}" alt="${pkg.imageAlt}" loading="lazy" decoding="async">
         <div class="card-body"><div class="meta-row"><span>${pkg.duration}</span><span>${pkg.location}</span></div><h3>${pkg.title}</h3><p>${pkg.summary}</p>
           <div class="trust-strip">${pkg.tags.map((tag, i) => `<span class="badge ${i ? "orange" : "dark"}">${tag}</span>`).join("")}</div>
-          <div class="card-actions"><span class="price">${pkg.priceLabel}</span><a class="btn" href="${pkg.detailHref}">${pkg.detailLabel}</a></div>
-          <button class="flip-toggle" type="button" aria-expanded="false">Show package details</button><span class="tap-hint" aria-hidden="true">Tap for details</span>
+          <div class="card-actions"><span class="price">${pkg.priceLabel}</span><a class="btn" data-card-action="true" href="${href}">${pkg.detailLabel}</a></div>
+          <button class="flip-toggle" data-card-action="true" type="button" aria-expanded="false" aria-controls="${detailsId}">Show package details</button><span class="tap-hint" aria-hidden="true">Tap for details</span>
         </div>
       </div>
-      <div class="package-card flip-card-face flip-card-back" aria-hidden="true" inert>
-        <div class="card-body"><p class="eyebrow">${pkg.duration}</p><h3>${heading}</h3><ul class="compact-list">${list.map(item => `<li>${item}</li>`).join("")}</ul>${detail}
-          <span class="price">${pkg.priceLabel}</span><div class="card-actions"><a class="btn alt" href="${pkg.detailHref}">${pkg.detailLabel}</a><a class="btn subtle" href="https://wa.me/254718556972">WhatsApp</a></div>
-          <button class="flip-toggle back-toggle" type="button" aria-expanded="true">Show package summary</button>
+      <div class="package-card flip-card-face flip-card-back" id="${detailsId}" aria-hidden="true" inert>
+        <div class="card-body package-card-back-content"><p class="eyebrow">${pkg.duration} · ${pkg.location}</p><h3>${pkg.reverse.heading}</h3><p class="package-intro">${pkg.reverse.introduction}</p><ul class="compact-list">${pkg.reverse.features.map(item => `<li>${item}</li>`).join("")}</ul>${pkg.reverse.note ? `<p class="package-note">${pkg.reverse.note}</p>` : ""}${pkg.reverse.exclusions ? `<p class="package-note">${pkg.reverse.exclusions}</p>` : ""}
+          <span class="price">${pkg.priceLabel}</span><div class="card-actions package-card-back-actions"><a class="btn alt" data-card-action="true" href="${href}">${pkg.detailLabel}</a><a class="btn subtle" data-card-action="true" href="${pkg.enquiryHref}">Send enquiry</a></div>
+          <button class="flip-toggle back-toggle" data-card-action="true" type="button" aria-expanded="true" aria-controls="${detailsId}">Show package summary</button>
         </div>
       </div>
     </div>
@@ -257,7 +255,7 @@ function setupPackageCards() {
   document.querySelectorAll("[data-featured-packages]").forEach((grid) => {
     const retained = grid.querySelector("[data-retained-package]");
     grid.insertAdjacentHTML("afterbegin", data.packages.map(packageCardMarkup).join(""));
-    if (retained) retained.classList.add("flip-retained");
+    if (retained) retained.remove();
   });
   const sections = document.querySelectorAll("[data-package-section]");
   sections.forEach((section) => {
@@ -276,9 +274,13 @@ function setupPackageCards() {
     };
     cards.forEach(card => {
       card.addEventListener("click", e => {
-        if (e.target.closest("a")) return;
-        if (e.target.closest(".flip-toggle") || matchMedia("(hover: none), (pointer: coarse)").matches) setFlipped(card, !card.classList.contains("is-flipped"));
+        if (e.target.closest('a, button, input, select, textarea, [role="button"], [data-card-action="true"]') && !e.target.closest(".flip-toggle")) { clearTimeout(timer); return; }
+        if (e.target.closest(".flip-toggle") || matchMedia("(hover: none), (pointer: coarse)").matches) { clearTimeout(timer); setFlipped(card, !card.classList.contains("is-flipped")); }
       });
+      if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
+        card.addEventListener("pointerenter", () => { clearTimeout(timer); setFlipped(card, true); });
+        card.addEventListener("pointerleave", () => { setFlipped(card, false); schedule(); });
+      }
       card.addEventListener("keydown", e => { if (e.key === "Escape") setFlipped(card, false); });
     });
     const schedule = () => {
@@ -296,6 +298,21 @@ function setupPackageCards() {
     new IntersectionObserver(([entry]) => { visible = entry.intersectionRatio >= .55; if (!visible) cards.forEach(c => setFlipped(c, false)); schedule(); }, { threshold: [.1, .55, .8] }).observe(section);
     ["pointerdown", "pointermove", "touchstart", "keydown", "focusin"].forEach(type => section.addEventListener(type, schedule, { passive: true }));
   });
+}
+
+function setupEnquiryPreselection() {
+  const select = document.querySelector("#package-type");
+  if (!select) return;
+  const packages = {
+    "maasai-mara-safari": "3 Days Maasai Mara Safari",
+    "nairobi-circuit-day-trip": "Nairobi Circuit Day Trip",
+    "diani-beach-holiday": "Diani Beach Holiday"
+  };
+  Object.entries(packages).forEach(([value, label]) => {
+    const option = document.createElement("option"); option.value = value; option.textContent = label; select.append(option);
+  });
+  const requested = new URLSearchParams(location.search).get("package");
+  if (requested && packages[requested]) select.value = requested;
 }
 
 function galleryItemMarkup(item, duplicate = false) {
@@ -363,6 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupFilterChips();
   setupLightbox();
   setupForms();
+  setupEnquiryPreselection();
   setupScrollButtons();
   handleScroll();
 });

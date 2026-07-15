@@ -1132,10 +1132,13 @@ h3 {
 }
 
 /* Package detail flips */
-.flip-card { min-width: 0; height: 620px; perspective: 1200px; }
-.flip-card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 760ms cubic-bezier(.22,1,.36,1); }
+.cards-grid[data-featured-packages] { align-items: stretch; }
+.flip-card { min-width: 0; height: 100%; min-height: 650px; perspective: 1200px; }
+.flip-card-inner { display: grid; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 760ms cubic-bezier(.22,1,.36,1); }
 .flip-card.is-flipped .flip-card-inner { transform: rotateY(180deg); }
-.flip-card-face { position: absolute; inset: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.flip-card-face { grid-area: 1 / 1; min-width: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; pointer-events: none; }
+.flip-card:not(.is-flipped) .flip-card-front { pointer-events: auto; }
+.flip-card.is-flipped .flip-card-back { pointer-events: auto; }
 .flip-card-face.package-card:hover { transform: none; }
 .flip-card-front { display: flex; flex-direction: column; }
 .flip-card-front .card-body { display: flex; flex: 1; flex-direction: column; }
@@ -1148,7 +1151,10 @@ h3 {
 .compact-list { display: grid; gap: .45rem; margin: .4rem 0 1rem; padding-left: 1.25rem; }
 .compact-list li::marker { color: var(--orange-400); }
 .package-note { color: rgba(255,255,255,.78); font-size: .86rem; line-height: 1.55; }
-.flip-toggle { margin-top: .75rem; border: 0; background: none; color: var(--green-700); font: inherit; font-size: .76rem; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.flip-toggle { display: inline-flex; min-height: 44px; align-items: center; align-self: center; justify-content: center; margin-top: .6rem; padding: .35rem .65rem; border: 0; background: none; color: var(--green-700); font: inherit; font-size: .76rem; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.flip-toggle:focus-visible { border-radius: .4rem; outline: 3px solid var(--orange-400); outline-offset: 2px; }
+.package-intro { margin-bottom: .65rem; color: rgba(255,255,255,.86); font-size: .9rem; line-height: 1.55; }
+.package-card-back-actions { display: flex; flex-wrap: wrap; gap: .55rem; }
 .flip-card-back .flip-toggle { color: var(--white); }
 .tap-hint { display: none; margin-top: .35rem; color: var(--muted); font-size: .72rem; text-align: center; }
 
@@ -1167,16 +1173,10 @@ h3 {
 .nairobi-stop-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 2rem; }
 .nairobi-stop-grid img { width: 100%; height: 210px; border-radius: var(--radius); object-fit: cover; box-shadow: var(--soft-shadow); }
 
-@media (hover: hover) and (pointer: fine) {
-  .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
-  .flip-card:hover .flip-card-front { pointer-events: none; }
-  .flip-card:hover .flip-card-back { pointer-events: auto; }
-}
-
 @media (hover: none), (pointer: coarse) { .tap-hint { display: block; } }
 
 @media (max-width: 760px) {
-  .flip-card { height: 650px; }
+  .flip-card { height: auto; min-height: 680px; }
   .motion-gallery { gap: .7rem; }
   .gallery-row { gap: .7rem; }
   .motion-gallery-item { flex-basis: 72vw; height: 48vw; }
