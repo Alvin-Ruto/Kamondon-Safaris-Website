@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="icon" type="image/jpeg" href="assets/Logo/Kamondon-Logo.jpeg">
+  <script src="assets/js/safari-data.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </head>
 <body>
@@ -131,7 +132,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" data-package-section>
       <div class="container">
         <div class="section-head">
           <div>
@@ -141,34 +142,8 @@
           </div>
           <a class="btn subtle" href="packages.html">View all safaris <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
         </div>
-        <div class="cards-grid">
-          <article class="package-card reveal">
-            <img src="assets/images/luxury-mara-tent.jpg" alt="Luxury safari tent in the Maasai Mara">
-            <div class="card-body">
-              <div class="meta-row"><span>3 Days</span><span>Maasai Mara</span></div>
-              <h3>3 Days Maasai Mara Safari</h3>
-              <p>Big cats, open plains, sunset game drives, and comfortable camp stays.</p>
-              <div class="trust-strip"><span class="badge dark">Family</span><span class="badge orange">Budget</span></div>
-              <div class="card-actions">
-                <span class="price">From $550</span>
-                <a class="btn" href="package-detail.html">View Details</a>
-              </div>
-            </div>
-          </article>
-          <article class="package-card reveal">
-            <img src="assets/images/tsavo-red-elephants.jpg" alt="Red elephants in Tsavo National Park">
-            <div class="card-body">
-              <div class="meta-row"><span>4 Days</span><span>Amboseli & Tsavo</span></div>
-              <h3>Amboseli & Tsavo Safari</h3>
-              <p>Elephants below Kilimanjaro, red dust landscapes, and classic Kenya views.</p>
-              <div class="trust-strip"><span class="badge dark">Group</span><span class="badge orange">Mid-range</span></div>
-              <div class="card-actions">
-                <span class="price">From $720</span>
-                <a class="btn" href="packages.html">Enquire</a>
-              </div>
-            </div>
-          </article>
-          <article class="package-card reveal">
+        <div class="cards-grid" data-featured-packages>
+          <article class="package-card reveal" data-retained-package>
             <img src="assets/images/diani-coast-turquoise.jpg" alt="Turquoise coast at Diani Beach">
             <div class="card-body">
               <div class="meta-row"><span>5 Days</span><span>Beach Holiday</span></div>
@@ -438,12 +413,10 @@
           </div>
           <a class="btn subtle" href="gallery.html">Open gallery</a>
         </div>
-        <div class="gallery-grid">
-          <button class="gallery-item reveal" type="button"><img src="assets/images/leopard-portrait.jpg" alt="Leopard resting in a tree"><span class="gallery-caption">Wildlife</span></button>
-          <button class="gallery-item reveal" type="button"><img src="assets/images/wildebeest-migration.jpg" alt="Wildebeest crossing a river"><span class="gallery-caption">Great Migration</span></button>
-          <button class="gallery-item reveal" type="button"><img src="assets/images/maasai-cultural-dance.jpg" alt="Maasai cultural dance"><span class="gallery-caption">Culture</span></button>
-          <button class="gallery-item reveal" type="button"><img src="assets/images/rhinos-lake-nakuru.jpg" alt="Rhinos in Lake Nakuru mist"><span class="gallery-caption">Parks</span></button>
+        <div class="motion-gallery reveal" data-motion-gallery data-limit="9" aria-label="Featured safari gallery. Drag horizontally to explore.">
+          <div class="gallery-row" data-gallery-row></div><div class="gallery-row" data-gallery-row></div><div class="gallery-row" data-gallery-row></div>
         </div>
+        <p class="gallery-hint"><span class="material-symbols-outlined" aria-hidden="true">swipe</span> Drag or swipe to explore</p>
       </div>
     </section>
 

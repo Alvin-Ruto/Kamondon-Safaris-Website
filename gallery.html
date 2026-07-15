@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="icon" type="image/jpeg" href="assets/Logo/Kamondon-Logo.jpeg">
-  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/safari-data.js" defer></script><script src="assets/js/main.js" defer></script>
 </head>
 <body>
   <div class="progress-bar"></div>
@@ -21,17 +21,10 @@
     <section class="section">
       <div class="container">
         <div class="section-head"><div><p class="eyebrow">Featured moments</p><h2>Safari Image Stories</h2></div><a class="btn subtle" href="contact.html">Plan your own trip</a></div>
-        <div class="gallery-grid">
-          <button class="gallery-item reveal" type="button"><img src="assets/images/leopard-portrait.jpg" alt="Leopard resting in tree"><span class="gallery-caption">Wildlife</span></button>
-          <button class="gallery-item reveal" type="button"><img src="assets/images/wildebeest-migration.jpg" alt="Wildebeest migration river crossing"><span class="gallery-caption">Great Migration</span></button>
-          <button class="gallery-item reveal" type="button"><img src="assets/images/maasai-cultural-dance.jpg" alt="Maasai cultural performance"><span class="gallery-caption">Culture</span></button>
-          <button class="gallery-item reveal" type="button"><img src="assets/images/rhinos-lake-nakuru.jpg" alt="Rhinos in Lake Nakuru mist"><span class="gallery-caption">Parks</span></button>
-          <button class="gallery-item reveal" type="button"><img src="assets/images/safari-vehicles-amboseli.jpg" alt="Safari vehicles near Kilimanjaro"><span class="gallery-caption">Safari Vehicles</span></button>
-          <button class="gallery-item reveal" type="button"><img src="assets/images/luxury-camp-interior.jpg" alt="Luxury safari camp interior"><span class="gallery-caption">Hotels & Lodges</span></button>
-          <button class="gallery-item reveal" type="button"><img src="assets/images/diani-beach-palms.jpg" alt="Diani Beach palms"><span class="gallery-caption">Beach Holidays</span></button>
-          <button class="gallery-item reveal" type="button"><img src="assets/images/group-safari-vehicle.jpg" alt="Group travelers on safari"><span class="gallery-caption">Team Building</span></button>
-          <button class="gallery-item reveal" type="button"><img src="assets/images/family-giraffe-breakfast.jpg" alt="Family safari breakfast"><span class="gallery-caption">Happy Travellers</span></button>
+        <div class="motion-gallery reveal" data-motion-gallery aria-label="Safari image gallery. Drag horizontally to explore.">
+          <div class="gallery-row" data-gallery-row></div><div class="gallery-row" data-gallery-row></div><div class="gallery-row" data-gallery-row></div>
         </div>
+        <p class="gallery-hint"><span class="material-symbols-outlined" aria-hidden="true">swipe</span> Drag or swipe to explore</p>
       </div>
     </section>
   </main>

@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="icon" type="image/jpeg" href="assets/Logo/Kamondon-Logo.jpeg">
-  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/safari-data.js" defer></script><script src="assets/js/main.js" defer></script>
 </head>
 <body>
   <div class="progress-bar" aria-hidden="true"></div>
@@ -50,7 +50,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" data-package-section>
       <div class="container">
         <div class="section-head">
           <div>
@@ -58,8 +58,8 @@
             <h2>Visual Packages Built For Easy Enquiry</h2>
           </div>
         </div>
-        <div class="cards-grid">
-          <article class="package-card reveal" data-card-tags="mara short budget family high">
+        <div class="cards-grid" data-featured-packages>
+          <article class="package-card reveal" data-card-tags="mara short budget family high" style="display:none">
             <img src="assets/images/luxury-mara-tent.jpg" alt="Luxury camp in Maasai Mara">
             <div class="card-body">
               <div class="meta-row"><span>3 Days</span><span>Nairobi - Maasai Mara</span></div>
@@ -69,7 +69,7 @@
               <div class="card-actions"><span class="price">From $550</span><a class="btn" href="package-detail.html">View Package</a><a class="btn subtle" href="contact.html">Enquire</a></div>
             </div>
           </article>
-          <article class="package-card reveal" data-card-tags="amboseli tsavo medium mid group low">
+          <article class="package-card reveal" data-card-tags="amboseli tsavo medium mid group low" style="display:none">
             <img src="assets/images/tsavo-red-elephants.jpg" alt="Red elephants in Tsavo">
             <div class="card-body">
               <div class="meta-row"><span>4 Days</span><span>Nairobi - Amboseli - Tsavo</span></div>
@@ -121,6 +121,14 @@
           </article>
         </div>
       </div>
+    </section>
+
+    <section class="section alt" id="nairobi-circuit">
+      <div class="container split">
+        <div class="reveal"><p class="eyebrow">Day trip · Nairobi</p><h2>Nairobi Circuit Day Trip</h2><p class="lead">A flexible city route connecting Nairobi’s wildlife attractions and recreation sites in one day.</p><ol class="timeline"><li class="timeline-item"><div><h3>Nairobi Animal Orphanage</h3><p>Begin with rescued wildlife and conservation education.</p></div></li><li class="timeline-item"><div><h3>Nairobi Safari Walk</h3><p>Continue along the raised viewing walk and natural habitats.</p></div></li><li class="timeline-item"><div><h3>Giraffe Centre</h3><p>Meet Rothschild’s giraffes and learn about their conservation.</p></div></li><li class="timeline-item"><div><h3>Uhuru Park</h3><p>Finish at Nairobi’s central recreation space.</p></div></li></ol></div>
+        <aside class="card card-body reveal"><span class="badge orange">Request USD quote</span><h3>Route details</h3><ul class="check-list"><li>Four Nairobi stops</li><li>Flexible day itinerary</li><li>Tips excluded</li><li>Park entry excluded</li></ul><div class="card-actions"><a class="btn alt" href="contact.html">Enquire</a><a class="btn subtle" href="https://wa.me/254718556972">WhatsApp</a></div></aside>
+      </div>
+      <div class="container nairobi-stop-grid"><img src="assets/images/Images-K/Nairobi Circuit/Nairobi-Ophanage-1a.jpg" alt="Wildlife at Nairobi Animal Orphanage" loading="lazy"><img src="assets/images/Images-K/Nairobi Circuit/Nairobi-safari-walk-2a.jpg" alt="Nairobi Safari Walk viewing area" loading="lazy"><img src="assets/images/Images-K/Nairobi Circuit/giraffe-center-1b.jpg" alt="Giraffe at the Giraffe Centre" loading="lazy"><img src="assets/images/Images-K/Nairobi Circuit/uhuru-park-1a.jpg" alt="Uhuru Park and Nairobi skyline" loading="lazy"></div>
     </section>
 
     <section class="section alt">

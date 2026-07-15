@@ -226,6 +226,105 @@ function setupLightbox() {
   });
 }
 
+function packageCardMarkup(pkg) {
+  const list = pkg.stops || pkg.inclusions;
+  const heading = pkg.stops ? "Places on this route" : "What is included";
+  const detail = pkg.stops
+    ? `<p class="package-note">Tips and park entry are excluded.</p>`
+    : `<p class="package-note"><strong>Transport:</strong> ${pkg.transportOptions.join(" or ")}<br><strong>Selected stays:</strong> ${pkg.accommodationOptions.slice(0, 3).join(", ")} and more</p>`;
+  return `<article class="flip-card reveal" data-package-card>
+    <div class="flip-card-inner">
+      <div class="package-card flip-card-face flip-card-front">
+        <img src="${pkg.image}" alt="${pkg.imageAlt}" loading="lazy" decoding="async">
+        <div class="card-body"><div class="meta-row"><span>${pkg.duration}</span><span>${pkg.location}</span></div><h3>${pkg.title}</h3><p>${pkg.summary}</p>
+          <div class="trust-strip">${pkg.tags.map((tag, i) => `<span class="badge ${i ? "orange" : "dark"}">${tag}</span>`).join("")}</div>
+          <div class="card-actions"><span class="price">${pkg.priceLabel}</span><a class="btn" href="${pkg.detailHref}">${pkg.detailLabel}</a></div>
+          <button class="flip-toggle" type="button" aria-expanded="false">Show package details</button><span class="tap-hint" aria-hidden="true">Tap for details</span>
+        </div>
+      </div>
+      <div class="package-card flip-card-face flip-card-back" aria-hidden="true" inert>
+        <div class="card-body"><p class="eyebrow">${pkg.duration}</p><h3>${heading}</h3><ul class="compact-list">${list.map(item => `<li>${item}</li>`).join("")}</ul>${detail}
+          <span class="price">${pkg.priceLabel}</span><div class="card-actions"><a class="btn alt" href="${pkg.detailHref}">${pkg.detailLabel}</a><a class="btn subtle" href="https://wa.me/254718556972">WhatsApp</a></div>
+          <button class="flip-toggle back-toggle" type="button" aria-expanded="true">Show package summary</button>
+        </div>
+      </div>
+    </div>
+  </article>`;
+}
+
+function setupPackageCards() {
+  const data = window.KAMONDON_DATA;
+  document.querySelectorAll("[data-featured-packages]").forEach((grid) => {
+    const retained = grid.querySelector("[data-retained-package]");
+    grid.insertAdjacentHTML("afterbegin", data.packages.map(packageCardMarkup).join(""));
+    if (retained) retained.classList.add("flip-retained");
+  });
+  const sections = document.querySelectorAll("[data-package-section]");
+  sections.forEach((section) => {
+    const cards = [...section.querySelectorAll("[data-package-card]")];
+    let active = null, visible = false, timer, sequenceRuns = 0;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const setFlipped = (card, value) => {
+      if (value && active && active !== card) setFlipped(active, false);
+      card.classList.toggle("is-flipped", value);
+      card.querySelector(".flip-card-front").toggleAttribute("inert", value);
+      card.querySelector(".flip-card-front").setAttribute("aria-hidden", String(value));
+      card.querySelector(".flip-card-back").toggleAttribute("inert", !value);
+      card.querySelector(".flip-card-back").setAttribute("aria-hidden", String(!value));
+      card.querySelectorAll(".flip-toggle").forEach(b => b.setAttribute("aria-expanded", String(value)));
+      active = value ? card : (active === card ? null : active);
+    };
+    cards.forEach(card => {
+      card.addEventListener("click", e => {
+        if (e.target.closest("a")) return;
+        if (e.target.closest(".flip-toggle") || matchMedia("(hover: none), (pointer: coarse)").matches) setFlipped(card, !card.classList.contains("is-flipped"));
+      });
+      card.addEventListener("keydown", e => { if (e.key === "Escape") setFlipped(card, false); });
+    });
+    const schedule = () => {
+      clearTimeout(timer);
+      if (reduced || !visible || sequenceRuns >= 2 || document.visibilityState !== "visible") return;
+      timer = setTimeout(async () => {
+        sequenceRuns++;
+        for (const card of cards) {
+          if (!visible || document.visibilityState !== "visible" || section.matches(":hover") || section.contains(document.activeElement)) break;
+          setFlipped(card, true); await new Promise(r => timer = setTimeout(r, 2400)); setFlipped(card, false); await new Promise(r => timer = setTimeout(r, 450));
+        }
+        timer = setTimeout(schedule, 12000);
+      }, 4000);
+    };
+    new IntersectionObserver(([entry]) => { visible = entry.intersectionRatio >= .55; if (!visible) cards.forEach(c => setFlipped(c, false)); schedule(); }, { threshold: [.1, .55, .8] }).observe(section);
+    ["pointerdown", "pointermove", "touchstart", "keydown", "focusin"].forEach(type => section.addEventListener(type, schedule, { passive: true }));
+  });
+}
+
+function galleryItemMarkup(item, duplicate = false) {
+  return `<button class="motion-gallery-item gallery-item" type="button" ${duplicate ? 'tabindex="-1" aria-hidden="true"' : ""} data-category="${item.category}"><img src="${item.src}" alt="${duplicate ? "" : item.alt}" loading="lazy" decoding="async"><span class="gallery-caption">${item.caption}</span></button>`;
+}
+
+function setupMotionGalleries() {
+  const data = window.KAMONDON_DATA;
+  document.querySelectorAll("[data-motion-gallery]").forEach(gallery => {
+    const requested = gallery.dataset.limit ? data.gallery.slice(0, Number(gallery.dataset.limit)) : data.gallery;
+    const rows = [...gallery.querySelectorAll("[data-gallery-row]")];
+    rows.forEach((row, index) => {
+      const items = requested.filter((_, i) => i % rows.length === index);
+      row.innerHTML = items.concat(items).map((item, i) => galleryItemMarkup(item, i >= items.length)).join("");
+    });
+    let x = 0, last = performance.now(), dragging = false, startX = 0, baseX = 0, velocity = 0, visible = false, pauseUntil = 0, moved = false;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const render = () => rows.forEach((row, i) => { const width = row.scrollWidth / 2; const offset = width ? ((x * [0.86, 1, 0.92][i] % width) + width) % width : 0; row.style.transform = `translate3d(${-offset}px,0,0)`; row.style.setProperty("--gallery-parallax", `${Math.max(-14, Math.min(14, velocity * .35))}px`); });
+    function tick(now) { const dt = Math.min((now - last) / 1000, .05); last = now; if (visible && !reduced && !dragging && now > pauseUntil && document.visibilityState === "visible" && !gallery.matches(":hover") && !gallery.contains(document.activeElement)) { x += 16 * dt; velocity *= .9; render(); } requestAnimationFrame(tick); }
+    gallery.addEventListener("pointerdown", e => { if (e.button !== 0) return; dragging = true; moved = false; startX = e.clientX; baseX = x; velocity = 0; gallery.setPointerCapture(e.pointerId); gallery.classList.add("is-dragging"); });
+    gallery.addEventListener("pointermove", e => { if (!dragging) return; const delta = e.clientX - startX; if (Math.abs(delta) > 6) moved = true; velocity = -delta - (x - baseX); x = baseX - delta; render(); });
+    const end = () => { if (!dragging) return; dragging = false; gallery.classList.remove("is-dragging"); pauseUntil = performance.now() + 2200; };
+    gallery.addEventListener("pointerup", end); gallery.addEventListener("pointercancel", end);
+    gallery.addEventListener("click", e => { if (moved) { e.preventDefault(); e.stopImmediatePropagation(); moved = false; } }, true);
+    new IntersectionObserver(([entry]) => visible = entry.intersectionRatio >= .35, { threshold: [.1, .35] }).observe(gallery);
+    requestAnimationFrame(tick);
+  });
+}
+
 function setupForms() {
   document.querySelectorAll("form[data-demo-form]").forEach((form) => {
     form.addEventListener("submit", (event) => {
@@ -255,6 +354,8 @@ document.addEventListener("DOMContentLoaded", () => {
   setActiveNav();
   setupMenu();
   setupHeroCarousel();
+  setupPackageCards();
+  setupMotionGalleries();
   setupReveal();
   setupCounters();
   setupFaqs();
