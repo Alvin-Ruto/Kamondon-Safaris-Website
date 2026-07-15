@@ -1133,17 +1133,19 @@ h3 {
 
 /* Package detail flips */
 .cards-grid[data-featured-packages] { align-items: stretch; }
-.flip-card { min-width: 0; height: 100%; min-height: 650px; perspective: 1200px; }
-.flip-card-inner { display: grid; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 760ms cubic-bezier(.22,1,.36,1); }
+.flip-card { min-width: 0; height: 100%; min-height: 650px; perspective: 1200px; isolation: isolate; }
+.flip-card-inner { display: grid; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 760ms cubic-bezier(.22,1,.36,1); will-change: transform; }
 .flip-card.is-flipped .flip-card-inner { transform: rotateY(180deg); }
-.flip-card-face { grid-area: 1 / 1; min-width: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; pointer-events: none; }
+.flip-card-face { grid-area: 1 / 1; min-width: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; pointer-events: none; transform-style: preserve-3d; }
 .flip-card:not(.is-flipped) .flip-card-front { pointer-events: auto; }
 .flip-card.is-flipped .flip-card-back { pointer-events: auto; }
-.flip-card-face.package-card:hover { transform: none; }
+.flip-card-front,
+.flip-card-front.package-card:hover { transform: rotateY(0deg) translateZ(.1px); }
 .flip-card-front { display: flex; flex-direction: column; }
 .flip-card-front .card-body { display: flex; flex: 1; flex-direction: column; }
 .flip-card-front .card-actions { margin-top: auto; }
-.flip-card-back { transform: rotateY(180deg); background: linear-gradient(145deg, var(--green-900), #123f32); color: var(--white); }
+.flip-card-back,
+.flip-card-back.package-card:hover { transform: rotateY(180deg) translateZ(.1px); background: linear-gradient(145deg, var(--green-900), #123f32); color: var(--white); }
 .flip-card-back .card-body { display: flex; height: 100%; flex-direction: column; padding: 1.4rem; }
 .flip-card-back h3, .flip-card-back .price { color: var(--white); }
 .flip-card-back .eyebrow { color: var(--orange-300); }
